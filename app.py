@@ -205,7 +205,7 @@ with col_a:
 This chart tests the conventional story: if Brazil's currency weakens, coffee should get cheaper
 because Brazilian farmers earn more reals per dollar of coffee sold, so they sell more, adding
 supply and pushing prices down. If that story were true, you would expect the two lines to move
-in opposite directions — one up when the other goes down. This chart lets you see whether that
+in opposite directions one up when the other goes down. This chart lets you see whether that
 actually happened.
 """)
 with col_b:
@@ -215,8 +215,8 @@ with col_b:
 The {abs(arabica_total_return):.0f}% move in coffee since {start_date.strftime('%B %Y')} is one
 of the largest commodity rallies of the past decade. If it were explained by BRL weakness, you
 would expect a similarly large move in the exchange rate. The BRL moved only {abs(brl_total_return):.0f}%
-over the same period. That gap tells you the coffee rally was driven by something else entirely —
-supply shocks, harvest failures, and warehouse drawdowns — factors that have nothing to do with
+over the same period. That gap tells you the coffee rally was driven by something else entirely:
+supply shocks, harvest failures, and warehouse drawdowns, factors that have nothing to do with
 currency markets. Understanding this distinction matters for anyone trying to forecast coffee
 prices or hedge coffee exposure.
 """)
