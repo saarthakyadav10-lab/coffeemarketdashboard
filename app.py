@@ -116,7 +116,7 @@ with exp2:
     )
 with exp3:
     if abs(corr_latest) < 0.1:
-        corr_label = "no meaningful relationship"
+        corr_label = "currently have no meaningful relationship"
         corr_detail = f"Knowing whether BRL rose or fell today gives you almost no information about whether KC rose or fell."
     elif corr_latest >= 0.1:
         corr_label = "moving in the same direction"
@@ -368,8 +368,8 @@ if p_value < 0.05:
 else:
     st.warning(
         f"**Result:** The spread between KC and USD/BRL prices is not stationary over this period "
-        f"(p={p_value:.4f}). The pair does not share a stable long-run equilibrium. The spread can "
-        f"drift indefinitely, and a pairs trade has no statistical foundation in this window."
+        f"(p={p_value:.4f}). The pair does not share a stable long-run equilibrium over this full window. "
+        f"A pairs trade has no statistical foundation here, but the rolling test below shows when shorter sub-periods passed the threshold."
     )
 
 st.divider()
@@ -388,9 +388,8 @@ st.markdown(
     f"The regression finds that **each 1 real move in USD/BRL is associated with a "
     f"{beta:.1f} cent/lb move in KC** (β = {beta:.2f}). "
     f"The spread is how far KC currently sits from that prediction.\n\n"
-    f"**Today's spread: {spread_latest:+.1f} cents/lb.** KC is "
-    f"{'**{:.0f} cents above**'.format(spread_latest) if spread_latest > 0 else '**{:.0f} cents below**'.format(abs(spread_latest))} "
-    f"where BRL alone would predict it. The ±2σ bands sit at "
+    f"**Today's spread: {spread_latest:+.1f} cents/lb.** KC currently sits **{abs(spread_latest):.1f} cents** "
+    f"{'above' if spread_latest > 0 else 'below'} the level the BRL regression predicts. The ±2σ bands sit at "
     f"**±{2*spread_std:.0f} cents/lb.** When the spread exceeds these levels, "
     f"it has historically tended to revert, creating a potential pairs trade entry signal."
 )
@@ -465,9 +464,9 @@ st.plotly_chart(fig_roll, use_container_width=True)
 
 st.markdown(
     "**Reading the chart:** When the line is **below the red dashed line (p < 0.05)**, the KC/BRL "
-    "relationship was statistically real in that 252-day window the spread was mean-reverting and "
+    "relationship was statistically real in that 252-day window: the spread was mean-reverting and "
     "a pairs trade had a statistical foundation. When the line is **above 0.05**, the relationship "
-    "had broken down the spread could drift indefinitely and no statistical edge existed."
+    "had broken down, the spread could drift indefinitely and no statistical edge existed."
 )
 
 st.divider()
@@ -506,7 +505,7 @@ st.markdown(f"""<div class="findings-box">
 <strong>1. The textbook BRL–KC relationship is empirically weak at daily frequency.</strong>
 The Pearson correlation between KC and USD/BRL daily returns averages {rolling_corr.mean():.2f} since {start_date.strftime('%B %Y')},
 with the rolling {window}-day correlation oscillating between {rolling_corr.min():.2f} and {rolling_corr.max():.2f}.
-This directly contradicts the conventional explanation that BRL movements drive KC prices the signal does not show up in the daily return data.
+This directly contradicts the conventional explanation that BRL movements drive KC prices. The signal does not show up in the daily return data.
 </div>
 
 <div class="finding">
@@ -519,14 +518,14 @@ The productive research question is not "does the BRL–KC relationship exist" b
 <div class="finding">
 <strong>3. Cointegration is episodic, not structural.</strong>
 The Engle-Granger test on the full sample fails to reject non-cointegration (p = {p_value:.4f}).
-The rolling test reveals brief sub-0.05 episodes a sustained dip in late 2024 and early 2025 with p-values reaching as low as 0.001.
+The rolling test reveals brief sub-0.05 episodes: a sustained dip in late 2024 and early 2025 with p-values reaching as low as 0.001.
 The long-run equilibrium relationship exists but switches on and off rather than holding continuously.
 </div>
 
 <div class="finding">
 <strong>4. Supply shocks override FX dynamics entirely.</strong>
 The 2021 Brazilian frost and the 2024–2025 supply tightness regime both drove KC sharply higher while BRL remained range-bound.
-When supply-side news dominates frost damage, harvest shortfalls, warehouse drawdowns the FX transmission channel is effectively disabled.
+When supply-side news dominates, frost damage, harvest shortfalls, warehouse drawdowns, the FX transmission channel is effectively disabled.
 KC's {arabica_total_return:+.0f}% move since {start_date.strftime('%B %Y')} cannot be explained by BRL's {brl_total_return:+.0f}% depreciation.
 </div>
 
@@ -539,7 +538,7 @@ This makes KC a genuine portfolio diversifier: its return drivers are orthogonal
 
 <div class="finding">
 <strong>6. A static KC–BRL pairs trade is not viable.</strong>
-The cointegration evidence does not support a continuously deployed mean-reversion strategy the spread drifts indefinitely across most of the sample.
+The cointegration evidence does not support a continuously deployed mean-reversion strategy: the spread drifts indefinitely across most of the sample.
 A regime-conditional version activating only when the rolling cointegration p-value drops below a defined threshold is potentially viable and is the natural next step from this analysis.
 </div>
 
@@ -550,7 +549,7 @@ st.markdown(f"""<div class="limitations-box">
 
 This analysis uses Yahoo Finance daily continuous futures data, which carries roll-yield artifacts at contract expiry and does not capture intraday price dynamics or basis differences across delivery locations.
 The BRL–KC transmission mechanism may operate at weekly or monthly frequency rather than daily the correlation structure at lower frequencies has not been tested here and warrants a separate analysis.
-sThe natural next project is a formal regime-switching model (Markov-switching or threshold VAR) that replaces the informal structural / decoupled / inverted regime labels with a statistically estimated state process.
+The natural next project is a formal regime-switching model (Markov-switching or threshold VAR) that replaces the informal structural / decoupled / inverted regime labels with a statistically estimated state process.
 
 </div>""", unsafe_allow_html=True)
 
